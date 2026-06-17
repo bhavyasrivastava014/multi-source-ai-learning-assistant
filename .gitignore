@@ -1,0 +1,20 @@
+# Virtual Environment
+backend/venv/
+backend/.venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Environment Variables
+.env
+backend/.env
+
+# Uploaded Files
+backend/uploads/
+
+# Vector Database 
+backend/vector_db/
+
+# VS Code
+.vscode/
