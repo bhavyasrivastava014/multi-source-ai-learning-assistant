@@ -2,153 +2,216 @@
 
 ## Overview
 
-The Multi-Source AI Learning Assistant is a FastAPI-based application that allows users to upload and query information from multiple sources using Retrieval-Augmented Generation (RAG). It supports documents, webpages, and YouTube videos, enabling users to ask natural language questions about the indexed content.
+The *Multi-Source AI Learning Assistant* is a full-stack AI application built for the *Samasocial Technical Assignment*.
+
+It implements both required tasks:
+
+### *Task 1 – Multi-Source RAG Chatbot*
+
+An AI assistant that ingests content from *PDFs, PPTX presentations, webpages, and YouTube videos, indexes it using semantic embeddings, and answers questions with **Retrieval-Augmented Generation (RAG)* and *source citations*.
+
+### *Task 2 – Conversational AI Course Planner*
+
+A mentor-focused assistant that creates structured course plans through multi-turn conversations and allows iterative refinement using natural language.
+
+---
 
 ## Features
 
-* Upload and chat with PDF documents
-* Extract and chat with webpage content
-* Extract and chat with YouTube video transcripts
-* Semantic search using vector embeddings
-* Retrieval-Augmented Generation (RAG) for contextual responses
-* RESTful API with interactive Swagger documentation
+### 📚 Multi-Source Learning Assistant
+
+* Upload and chat with *PDF documents*
+* Upload and chat with *PPTX presentations*
+* Extract and index *webpage content*
+* Extract and index *YouTube transcripts*
+* Combine multiple sources in a single session
+* Semantic retrieval using *FAISS vector search*
+* Retrieval-Augmented Generation (RAG) for grounded answers
+* Source-aware citations (e.g., "from slide 4" or "at 3:22 in the video")
+* Interactive FastAPI Swagger documentation
+
+### 🎓 AI Course Planner
+
+* Multi-turn conversational interface
+* Generates:
+
+  * Module breakdown
+  * Learning objectives
+  * Lesson topics
+  * Recommended resources
+  * End-of-module assessments
+* Supports iterative refinement (e.g., "make Module 2 simpler")
+* Live course plan preview
+* Export final plan as structured JSON
+
+---
 
 ## Tech Stack
+
+### Backend
 
 * Python
 * FastAPI
 * FAISS
 * Google Gemini API
-* youtube-transcript-api
-* BeautifulSoup
 * PyPDF2
-* Uvicorn
+* python-pptx
+* BeautifulSoup
+* youtube-transcript-api
+
+### Frontend
+
+* React
+* Vite
+* Axios
+* React Router
+
+---
+
+## RAG Pipeline
+
+
+Source
+   ↓
+Text Extraction
+   ↓
+Chunking
+   ↓
+Embeddings
+   ↓
+FAISS Vector Index
+   ↓
+Semantic Retrieval
+   ↓
+Gemini LLM
+   ↓
+Grounded Response with Citations
+
+
+---
 
 ## Project Structure
 
-```
-backend/
-│── routes/
-│   ├── upload.py
-│   ├── webpage.py
-│   ├── youtube.py
-│   └── chat.py
+
+multi-source-ai-learning-assistant/
+
+├── backend/
+│   ├── routes/
+│   ├── services/
+│   ├── main.py
+│   └── requirements.txt
 │
-│── services/
-│   ├── embedding_service.py
-│   ├── youtube_service.py
-│   ├── webpage_service.py
-│   ├── pdf_service.py
-│   └── rag_store.py
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   └── package.json
 │
-│── main.py
-│── requirements.txt
-│── .env
-```
+└── README.md
+
+
+---
 
 ## Installation
 
-1. Clone the repository
+### Clone the repository
 
-```bash
+bash
 git clone <repository-url>
-cd <repository-folder>
-```
+cd multi-source-ai-learning-assistant
 
-2. Create a virtual environment
 
-```bash
+### Backend
+
+bash
 python -m venv venv
-```
 
-3. Activate the virtual environment
-
-Windows:
-
-```bash
+# Windows
 venv\Scripts\activate
-```
 
-Linux/macOS:
-
-```bash
+# Linux/macOS
 source venv/bin/activate
-```
 
-4. Install dependencies
-
-```bash
 pip install -r requirements.txt
-```
 
-5. Create a `.env` file
 
-```
+Create a .env file:
+
+env
 GEMINI_API_KEY=your_api_key_here
-```
 
-## Run the Project
 
-```bash
+Run the backend:
+
+bash
 uvicorn main:app --reload
-```
 
-Open:
 
-```
-http://127.0.0.1:8000/docs
-```
+Backend: http://127.0.0.1:8000
 
-to access the Swagger UI.
+Swagger Docs: http://127.0.0.1:8000/docs
+
+---
+
+### Frontend
+
+bash
+cd frontend
+
+npm install
+
+npm run dev
+
+
+Frontend: http://localhost:5173
+
+---
 
 ## API Endpoints
 
-### Upload a Document
-
-**POST** `/upload`
-
-Uploads and indexes a supported document for question answering.
-
----
-
-### Index a Webpage
-
-**POST** `/webpage`
-
-Extracts webpage content and stores it for semantic retrieval.
+| Endpoint            | Description                          |
+| ------------------- | ------------------------------------ |
+| POST /upload      | Upload and index a PDF               |
+| POST /pptx        | Upload and index a PPTX presentation |
+| POST /webpage     | Index webpage content                |
+| POST /youtube     | Index YouTube transcript             |
+| POST /chat        | Query indexed content                |
+| POST /course/chat | Create and refine course plans       |
 
 ---
 
-### Index a YouTube Video
+## Example Prompts
 
-**POST** `/youtube`
+### Learning Assistant
 
-Extracts the transcript of a YouTube video and indexes it for querying.
+* Summarize the uploaded PDF.
+* What are the key points from slide 5?
+* Compare information from the PDF and webpage.
+* What does the speaker explain at 2:30 in the video?
 
-Example request:
+### Course Planner
 
-```json
-{
-  "url": "https://www.youtube.com/watch?v=VIDEO_ID"
-}
-```
+* Create a 6-week Python course for beginners.
+* Simplify Module 3.
+* Add a capstone project at the end.
+* Include free learning resources.
 
 ---
 
-### Chat with Indexed Content
+## Known Limitations
 
-**POST** `/chat`
+* *Token-by-token streaming responses are not implemented.* Responses are returned after complete generation.
+* *Long conversation memory is limited* and may lose context after several turns.
+* *Course plans can be refined through chat*, but direct click-to-edit functionality is not currently available.
 
-Ask questions about the currently indexed content.
+---
 
-Example request:
+## Demo
+* ## Demo
+- **Task 1 Demo:** https://www.loom.com/share/c7921050adff43f396cb17b28d40d023
+- **Task 2 Demo:** https://www.loom.com/share/6a0cedf0e64b4de5b9f1d87b414fbed6
 
-```json
-{
-  "question": "Summarize the uploaded content."
-}
-```
+---
 
 ## Author
 
-Bhavya Srivastava
+*Bhavya Srivastava*
