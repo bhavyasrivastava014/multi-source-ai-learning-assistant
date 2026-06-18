@@ -22,7 +22,7 @@ def extract_transcript(url: str):
 
     api = YouTubeTranscriptApi()
 
-    transcript = api.fetch(video_id, languages=["hi", "en"])
+    transcript = api.fetch(video_id, languages=["en-US", "hi", "en"])
 
     text = ""
 

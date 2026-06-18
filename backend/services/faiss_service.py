@@ -3,20 +3,31 @@ import numpy as np
 
 
 def build_index(embeddings):
-    embeddings = np.array(embeddings).astype("float32")
+    embeddings = np.array(embeddings, dtype=np.float32)
 
     dimension = embeddings.shape[1]
-
-    index = faiss.IndexFlatL2(dimension)
-
+    index = faiss.IndexFlatIP(dimension)
     index.add(embeddings)
 
     return index
 
 
-def search_index(index, query_embedding, k=3):
-    query_embedding = np.array([query_embedding]).astype("float32")
+def retrieve_chunks(index, chunks, query_embedding, k=3):
+    query_embedding = np.array(query_embedding, dtype=np.float32)
+
+    # Ensure shape is (1, embedding_dim)
+    if query_embedding.ndim == 1:
+        query_embedding = query_embedding.reshape(1, -1)
 
     distances, indices = index.search(query_embedding, k)
 
-    return distances, indices
+    print("Distances:", distances)
+    print("Indices:", indices)
+
+    results = []
+
+    for idx in indices[0]:
+        if 0 <= idx < len(chunks):
+            results.append(chunks[idx])
+
+    return results
